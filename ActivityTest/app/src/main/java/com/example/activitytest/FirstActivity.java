@@ -1,8 +1,5 @@
 package com.example.activitytest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,9 +11,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class FirstActivity extends AppCompatActivity {
+public class FirstActivity extends BaseActivity {
+
+    public static final String TAG = "FirstActivity";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -24,7 +22,7 @@ public class FirstActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK) {
                     String returnedData = data.getStringExtra("data_return");
-                    Log.d("FirstActivity", returnedData);
+                    Log.d(TAG, returnedData);
                 }break;
             default:
         }
@@ -35,6 +33,7 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // 加载layout
         setContentView(R.layout.first_layout);
+        Log.d("FirstActivity", "Task id is " + getTaskId());
 
         // 注册button点击事件
         Button button1 = (Button) findViewById(R.id.button_1);
@@ -50,9 +49,12 @@ public class FirstActivity extends AppCompatActivity {
 
 //                intent.addCategory("com.example.activitytest.MY_CATEGORY");
 
+                // Standard test
+//                Intent intent = new Intent(FirstActivity.this, FirstActivity.class);
+
                 // 传递数据
-                String data = "Hello SecondActivity";
-                intent.putExtra("extra_data", data);
+//                String data = "Hello SecondActivity";
+//                intent.putExtra("extra_data", data);
                 startActivity(intent);
             }
         });
@@ -118,5 +120,11 @@ public class FirstActivity extends AppCompatActivity {
             default:
         }
         return true;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
     }
 }
