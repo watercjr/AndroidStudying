@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private MyDataBaseHelper dbHelper;
@@ -88,6 +90,34 @@ public class MainActivity extends AppCompatActivity {
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
+            }
+        });
+
+        Button replaceData = findViewById(R.id.replace_data);
+        replaceData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.beginTransaction();  // 开启一个事务
+                try {
+                    db.delete("Book", null, null);
+                    // 手动抛出异常
+                    if (false) {
+                        throw new NullPointerException();
+                    }
+                    ContentValues values = new ContentValues();
+                    values.put("name", "Game of Thrones");
+                    values.put("author", "George Martin");
+                    values.put("pages", 720);
+                    values.put("price", 20.35);
+                    db.insert("Book", null, values);
+                    values.clear();
+                    db.setTransactionSuccessful(); // 表示事务已经执行成功
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    db.endTransaction();    // 结束事务
+                }
             }
         });
     }
